@@ -1,0 +1,24 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 105vh;
+}
+
+canvas {
+    display: block;
+    background-color: #111111;
+}
+
+#file-input {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    color: white;
+}
