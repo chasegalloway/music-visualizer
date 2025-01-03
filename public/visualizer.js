@@ -53,21 +53,19 @@ function visualize() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    const totalBars = 128; // Adjust for smoother visuals
+    const totalBars = 128; 
     const radius = 150;
 
-    // Calculate average volume
     const volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
-    // Draw circular bars
     for (let i = 0; i < totalBars; i++) {
         const value = dataArray[i];
         const angle = (Math.PI * 2 * i) / totalBars;
 
-        // Dynamic radius based on volume
         const dynamicRadius = radius + volume * 0.3;
 
         const barHeight = value * 0.7;
+
         const x1 = centerX + Math.cos(angle) * dynamicRadius;
         const y1 = centerY + Math.sin(angle) * dynamicRadius;
         const x2 = centerX + Math.cos(angle) * (dynamicRadius + barHeight);
@@ -78,12 +76,10 @@ function visualize() {
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
     }
-
-    // Pulse effect based on volume
+q
     const pulseRadius = radius + volume * 0.5;
     ctx.beginPath();
     ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
@@ -92,7 +88,6 @@ function visualize() {
     ctx.stroke();
 }
 
-// Resize canvas on window resize
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
