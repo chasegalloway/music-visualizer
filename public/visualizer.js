@@ -1,47 +1,19 @@
 const canvas = document.getElementById('visualizer');
 const ctx = canvas.getContext('2d');
-const fileInput = document.getElementById('file-input');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let audioContext;
-let analyser;
-let dataArray;
+let source;
+let isPlaying = false;
 
-fileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+function setupVisualizer() {
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 512;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-    if (!audioContext) {
-        audioContext = new AudioContext();
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-        const audioData = e.target.result;
-
-        audioContext.decodeAudioData(audioData, (buffer) => {
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 512;
-
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-            source.start();
-
-            visualize();
-        });
-    };
-
-    reader.readAsArrayBuffer(file);
-});
+    visualize();
+}
 
 function visualize() {
     requestAnimationFrame(visualize);
@@ -53,8 +25,8 @@ function visualize() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    const totalBars = 128; 
-    const radius = 150;
+    const totalBars = 100;
+    const radius = 125;
 
     const volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
@@ -64,8 +36,7 @@ function visualize() {
 
         const dynamicRadius = radius + volume * 0.3;
 
-        const barHeight = value * 0.7;
-
+        const barHeight = Math.log10(1 + value) * 60;
         const x1 = centerX + Math.cos(angle) * dynamicRadius;
         const y1 = centerY + Math.sin(angle) * dynamicRadius;
         const x2 = centerX + Math.cos(angle) * (dynamicRadius + barHeight);
@@ -76,10 +47,11 @@ function visualize() {
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.beginPath();
+        ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
     }
-q
+
     const pulseRadius = radius + volume * 0.5;
     ctx.beginPath();
     ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);

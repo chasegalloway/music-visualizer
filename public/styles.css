@@ -7,7 +7,7 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
-    height: 105vh;
+    height: 100vh;
 }
 
 canvas {
@@ -21,4 +21,24 @@ canvas {
     left: 20px;
     z-index: 10;
     color: white;
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #666;
 }
