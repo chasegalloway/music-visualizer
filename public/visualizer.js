@@ -52,7 +52,7 @@ function visualize() {
         ctx.stroke();
     }
 
-    const pulseRadius = radius + volume * 0.5;
+    const pulseRadius = radius + volume * 0.7;
     ctx.beginPath();
     ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
     ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;

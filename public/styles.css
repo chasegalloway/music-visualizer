@@ -13,6 +13,7 @@ body {
 canvas {
     display: block;
     background-color: #111111;
+    margin-top: 10px; 
 }
 
 #file-input {
@@ -23,7 +24,10 @@ canvas {
     color: white;
 }
 
-.button-container {
+#button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     margin-top: 10px;
 }
 
