@@ -1,5 +1,6 @@
 const canvas = document.getElementById('visualizer');
 const ctx = canvas.getContext('2d');
+const visualizerSelect = document.getElementById('visualizer-select');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -7,9 +8,15 @@ canvas.height = window.innerHeight;
 let source;
 let isPlaying = false;
 
+let selectedVisualizer = 'circular-bars';
+
+visualizerSelect.addEventListener('change', () => {
+    selectedVisualizer = visualizerSelect.value;
+});
+
 function setupVisualizer() {
     analyser = audioContext.createAnalyser();
-    analyser.fftSize = 512;
+    analyser.fftSize = 1024; 
     dataArray = new Uint8Array(analyser.frequencyBinCount);
 
     visualize();
@@ -22,6 +29,14 @@ function visualize() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if (selectedVisualizer === 'circular-bars') {
+        drawCircularBars();
+    } else if (selectedVisualizer === 'soundwave') {
+        drawRGBSoundwave();
+    }
+}
+
+function drawCircularBars() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
@@ -60,6 +75,27 @@ function visualize() {
     ctx.stroke();
 }
 
+function drawRGBSoundwave() {
+    const barWidth = (canvas.width / dataArray.length) * 2.5;
+    const centerY = canvas.height / 2;
+
+    for (let i = 0; i < dataArray.length; i++) {
+        const value = dataArray[i];
+        const barHeight = value * 1.5; 
+
+        const frequencyPercent = i / dataArray.length;
+        const red = Math.sin(0.3 * Math.PI * frequencyPercent) * 127 + 128;
+        const green = Math.sin(0.3 * Math.PI * frequencyPercent + 2) * 127 + 128;
+        const blue = Math.sin(0.3 * Math.PI * frequencyPercent + 4) * 127 + 128;
+
+        ctx.fillStyle = `rgb(${Math.floor(red)}, ${Math.floor(green)}, ${Math.floor(blue)})`;
+
+        const x = i * barWidth;
+        ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
+    }
+}
+
+// Handle resizing
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
